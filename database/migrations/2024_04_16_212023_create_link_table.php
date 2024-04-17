@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('url', function (Blueprint $table) {
+        Schema::create('links', function (Blueprint $table) {
             $table->id();
 
-            $table->string('url');
-            $table->string('token');
+            $table->string('original_url');
+            $table->string('token')->unique()->nullable();
             $table->dateTime('expire_at')->nullable();
-            $table->integer('used_counter');
+            $table->integer('used_count')->default(0);
 
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('url');
+        Schema::dropIfExists('links');
     }
 };
