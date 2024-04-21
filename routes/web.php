@@ -17,4 +17,6 @@ Route::get('/', [\App\Http\Controllers\LinkController::class, 'index']);
 
 Route::post('/create', [\App\Http\Controllers\LinkController::class, 'saveLink']);
 
-Route::get('/ride-to/{token}', [\App\Http\Controllers\LinkController::class, 'redirectTo']);
+Route::get('/redirect-to/{token}', [\App\Http\Controllers\LinkController::class, 'redirectTo']);
+
+Route::get('/statistic', [\App\Http\Controllers\LinkController::class, 'showStatistic']);

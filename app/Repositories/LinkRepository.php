@@ -7,11 +7,20 @@ use Illuminate\Support\Carbon;
 
 class LinkRepository
 {
-    public function create($url, $token, $expireAt)
+    /**
+     * @param $url
+     * @param $token
+     * @param $expireAt
+     * @return Link
+     */
+    public function firstOrCreate($url, $token, $expireAt): Link
     {
         $linkModel = Link::query()
             ->where('original_url', $url)
-            ->where('expire_at', '<=', Carbon::now())
+            ->where(function ($query) use ($expireAt) {
+                $query->where('expire_at', '<=', Carbon::now())
+                    ->orWhereIsNull('expire_at');
+            })
             ->first();
 
         if (!$linkModel) {
@@ -27,17 +36,15 @@ class LinkRepository
         return $linkModel;
     }
 
-    public function updateToken($linkId, $token)
-    {
-        return Link::where('id', $linkId)->update(['token' => $token]);
-    }
-
     /**
-     * @param string $originalUrl
-     * @return ?Link
+     * @param Link $link
+     * @param $token
+     * @return Link
      */
-    public function getLinkByOriginal(string $originalUrl): bool
+    public function updateToken(Link $link, $token): Link
     {
-        return Link::where('original_url', $originalUrl)->first();
+        $link->update(['token' => $token]);
+
+        return $link;
     }
 }
